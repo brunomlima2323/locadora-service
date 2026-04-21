@@ -1,6 +1,6 @@
 package com.bml.locadoraCarros.controller;
 
-import com.bml.locadoraCarros.entity.Carro;
+import com.bml.locadoraCarros.DTO.CarroDTO;
 import com.bml.locadoraCarros.service.CarroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/carro")
@@ -18,23 +17,27 @@ public class CarroController {
     private CarroService carroService;
 
     @PostMapping("/save")
-    public ResponseEntity<String> save(@RequestBody Carro carro) {
-        System.out.println(carro.toString());
+    public ResponseEntity<String> save(@RequestBody CarroDTO carroDTO) {
         try {
-            String mensagem = this.carroService.save(carro);
-            return new ResponseEntity<String>(mensagem,HttpStatus.CREATED);
+            String mensagem = this.carroService.save(carroDTO);
+            return new ResponseEntity<>(mensagem,HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+            System.out.println("Erro: " + e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
         }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<String> update(@RequestBody Carro carro, @PathVariable Long id) {
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<String> update(@RequestBody CarroDTO carroDTO, @PathVariable Long id) {
         try {
-            String mensagem = this.carroService.update(carro, id);
-            return new ResponseEntity<String>(mensagem,HttpStatus.OK);
+            String mensagem = this.carroService.update(carroDTO, id);
+            return new ResponseEntity<>(mensagem,HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
         }
     }
 
@@ -42,59 +45,71 @@ public class CarroController {
     public ResponseEntity<String> delete(@PathVariable Long id) {
         try {
             String mensagem = this.carroService.delete(id);
-            return new ResponseEntity<String>(mensagem,HttpStatus.OK);
+            return new ResponseEntity<>(mensagem,HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
         }
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity< List<Carro> > findAll() {
+    public ResponseEntity< List<CarroDTO> > findAll() {
         try {
-            List<Carro> lista = this.carroService.findAll();
-            return new ResponseEntity<List<Carro>>(lista,HttpStatus.OK);
+            List<CarroDTO> lista = this.carroService.findAll();
+            return new ResponseEntity<>(lista,HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
         }
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<Carro> findById(@PathVariable Long id) {
+    public ResponseEntity<CarroDTO> findById(@PathVariable Long id) {
         try {
-            Carro carro = this.carroService.findById(id);
-            return new ResponseEntity<Carro>(carro,HttpStatus.OK);
+            CarroDTO carroDTO = this.carroService.findById(id);
+            return new ResponseEntity<>(carroDTO,HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
         }
     }
 
     @GetMapping("/findByNome")
-    public ResponseEntity< List<Carro> > findByNome(@RequestParam String nome) {
+    public ResponseEntity< List<CarroDTO>> findByNome(@RequestParam String nome) {
         try {
-            List<Carro> lista = this.carroService.findByNome(nome);
-            return new ResponseEntity<List<Carro>>(lista,HttpStatus.OK);
+            List<CarroDTO> lista = this.carroService.findByNome(nome);
+            return new ResponseEntity<>(lista,HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
         }
     }
 
     @GetMapping("/findByMarca")
-    public ResponseEntity< List<Carro> > findByMarca(@RequestParam int idMarca) {
+    public ResponseEntity< List<CarroDTO> > findByMarca(@RequestParam int idMarca) {
         try {
-            List<Carro> lista = this.carroService.findByMarca(idMarca);
-            return new ResponseEntity<List<Carro>>(lista,HttpStatus.OK);
+            List<CarroDTO> lista = this.carroService.findByMarca(idMarca);
+            return new ResponseEntity<>(lista,HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
         }
     }
 
     @GetMapping("/findAcimaAno")
-    public ResponseEntity< List<Carro> > findAcimaAno(@RequestParam int ano) {
+    public ResponseEntity< List<CarroDTO> > findAcimaAno(@RequestParam int ano) {
         try {
-            List<Carro> lista = this.carroService.findAcimaAno(ano);
-            return new ResponseEntity<List<Carro>>(lista,HttpStatus.OK);
+            List<CarroDTO> lista = this.carroService.findAcimaAno(ano);
+            return new ResponseEntity<>(lista,HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
         }
     }
 }
